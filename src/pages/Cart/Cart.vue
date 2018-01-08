@@ -61,7 +61,7 @@
           </div>
           <table width="100%">
             <tr class="spline-bottom" v-for="(item, index) in carts" :key="item.id" v-if="item.num>0">
-              <td class="group-item-checkbox active">&nbsp;</td>
+              <td class="group-item-checkbox" :class="{'active':item.checked}" @click="changeChecked(item)">&nbsp;</td>
               <td class="group-item-img">
                 <img v-lazy="item.product_img">
               </td>
@@ -80,6 +80,12 @@
               </td>
             </tr>
           </table>
+            <div class="group-footer spline-bottom pl14 f14">
+              <span class="selectAll selectAll-false" :class="{'selectAll-true':checkedAll,
+              'selectAll-false':!checkedAll}" @click="changeCheckedAll">全选</span>
+              共：<span class="redfont">￥{{total.toFixed(2)}}</span>
+              <span class="group-btn yellowbg">选好了</span>
+          </div>
         </div>
       </div>
     </div>
@@ -105,9 +111,46 @@ export default {
     },
     user () {
       return this.$store.state.user
+    },
+    //总价
+    total(){
+      return this.$store.getters.total
+    },
+    //返回全选按钮的bol值
+    checkedAll(){
+      //假设都是勾选的
+      let checkedAll=true
+      for(let i =0;i<this.carts.length;i++){
+        if(!this.carts[i].checked){
+          checkedAll=false
+          break
+        }
+      }
+        return checkedAll
     }
   },
   methods: {
+    //更改购物车全选按钮的状态
+    changeCheckedAll(){
+      //通过判断checkedAll的值来决定是执行全部勾选还是全部取消
+      if(this.checkedAll){
+        //全部取消
+        this.$store.dispatch('checkedAllFalse')
+      }else{
+        //全部勾选
+         this.$store.dispatch('checkedAllTrue')
+         .then(res=>{
+           this.$msg('提示',res.msg)
+         })
+      }
+    },
+    //更改购物车商品的勾选状态
+    changeChecked(product){
+      this.$store.dispatch('changeChecked',product)
+      .then(res=>{
+        this.$msg('提示',res.msg)
+      })
+    },
     addCart (product) {
       // 将商品添加到购物车
       product.cartBol = true
@@ -116,7 +159,9 @@ export default {
           this.$msg('提示', res.msg)
           // 更新或者添加成功了之后让num++
           // product.num++
-          this.$store.commit('SAVE_CARTS', this.carts)
+          // this.$store.commit('SAVE_CARTS', this.carts)
+          this.$store.commit('RESET_CARTS',product)
+
         })
     },
     subCart (product) {
@@ -125,7 +170,10 @@ export default {
         .then(res => {
           this.$msg('提示', res.msg)
           // product.num--
-          this.$store.commit('SAVE_CARTS', this.carts)
+          // this.$store.commit('SAVE_CARTS', this.carts)
+          this.$store.commit('RESET_CARTS',product)
+
+
         })
     }
   }

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <TabBar/>
+    <TabBar v-show="tabBarShow"/>
     <!-- 缓存组件,created只触发一次啦 -->
     <keep-alive>
       <router-view></router-view>
@@ -49,6 +49,11 @@ export default {
         }
       }
       this.$store.commit('SAVE_COMPUTED_CATEGORIES', categories)
+    }
+  },
+  computed: {
+    tabBarShow () {
+      return this.$store.state.tabBarShow
     }
   }
 }

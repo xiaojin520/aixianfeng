@@ -36,7 +36,7 @@
           </div>
         </div>
         <ul class="productList-wrap">
-          <li v-for="(item, index) in sortProducts" :key="item.id">
+          <router-link tag="li" :to="'/product-item/' + item.id" v-for="(item, index) in sortProducts" :key="item.id">
             <dl>
               <dt>
                 <img v-lazy="item.imgs.min">
@@ -56,7 +56,7 @@
                 </div>
               </dd>
             </dl>
-          </li>
+          </router-link>
         </ul>
       </div>
     </div>

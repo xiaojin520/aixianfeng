@@ -55,5 +55,39 @@ export default {
         }
       }
     }
+  },
+  //充值购物车数量
+  RESET_CARTS(state,product){
+     // 更新本地的原始数据的num
+     let computedCategories = state.computedCategories
+     label:
+     for (let i = 0; i < computedCategories.length; i++) {
+       let products = computedCategories[i].products
+       for (let j = 0; j < products.length; j++) {
+         if (products[j].id === product.product_id) {
+           products[j].num = product.num
+           break label
+         }
+       }
+     }
+  },
+  //更新商品的选中状态
+  CHANGE_CHECKED(state,product){
+    let index=state.carts.indexOf(product)
+    state.carts[index].checked=!state.carts[index].checked
+  },
+   // 更改全部按钮的选中状态为false
+   CHECKED_ALL_FALSE (state) {
+    let carts = state.carts
+    for (let i = 0; i < carts.length; i++) {
+      carts[i].checked = false
+    }
+  },
+  // 更改全部按钮的选中状态为true
+  CHECKED_ALL_TRUE (state) {
+    let carts = state.carts
+    for (let i = 0; i < carts.length; i++) {
+      carts[i].checked = true
+    }
   }
 }

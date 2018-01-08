@@ -73,7 +73,9 @@ var data = new Mock.mock({
       // 商品的产地
       'place_of_origin': '@cword(2, 4)',
       // 数量
-      'num': 0
+      'num': 0,
+       // 商品详情
+       'details': '@cparagraph()'
     }
   ],
   // 用户信息表

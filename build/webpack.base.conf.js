@@ -1,4 +1,3 @@
-'use strict'
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
@@ -10,7 +9,6 @@ function resolve (dir) {
 
 const createLintingRule = () => ({
   test: /\.(js|vue)$/,
-  loader: 'eslint-loader',
   enforce: 'pre',
   include: [resolve('src'), resolve('test')],
   options: {

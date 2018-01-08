@@ -12,6 +12,8 @@ const Cart = resolve => require(['pages/Cart/Cart.vue'], resolve)
 const Mine = resolve => require(['pages/Mine/Mine'], resolve)
 // 登陆页
 const Login = resolve => require(['pages/Login/Login'], resolve)
+// 商品详情页
+const ProductItem = resolve => require(['pages/Product-item/Product-item'], resolve)
 
 
 
@@ -38,6 +40,11 @@ export default new Router({
     {
       path: '/login',
       component: Login
+    },
+    {
+      // 商品的id
+      path: '/product-item/:id',
+      component: ProductItem
     }
   ]
 })

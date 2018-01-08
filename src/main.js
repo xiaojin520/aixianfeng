@@ -7,11 +7,22 @@ import App from './App'
 import '@/styles/reset.js'
 // 引入通用css
 import '@/styles/index.less'
+// 引入vuex
+import store from './store'
 
 // 引入路由
 import router from './router'
-// 引入vuex
-import store from './store'
+// 路由拦截器(导航守卫),控制tabBar的显示隐藏
+router.beforeEach((to, from, next) => {
+  // console.log(to, from)
+  let path = to.path
+  if (path === '/' || path === '/category' || path === '/cart' || path === '/mine') {
+    store.state.tabBarShow = true
+  } else {
+    store.state.tabBarShow = false
+  }
+  next()
+})
 
 // 引入mintui
 import { Swipe, SwipeItem, Indicator, Lazyload, MessageBox } from 'mint-ui'
@@ -26,10 +37,10 @@ Vue.use(Lazyload)
 import axios from 'axios'
 Vue.prototype.$http = axios
 
-// 引入fastclick
-import fastclick from 'fastclick'
-// 官方推荐将fastclick绑定到body下，这样在body下的元素都不会有300ms的延迟
-fastclick.attach(document.body)
+// // 引入fastclick
+// import fastclick from 'fastclick'
+// // 官方推荐将fastclick绑定到body下，这样在body下的元素都不会有300ms的延迟
+// fastclick.attach(document.body)
 
 Vue.config.productionTip = false
 

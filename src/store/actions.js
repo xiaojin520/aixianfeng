@@ -163,5 +163,84 @@ export default {
           return { "msg": "删除商品成功" }
         })
     }
+  },
+  changeChecked(store,product){
+    //更新数据库中的商品的状态
+   return http.patch(api.host+'/carts/'+product.id,{
+     checked:!product.checked
+   })
+   .then(res=>{
+    if(res.data.id>0){
+      //更新本地购物车状态
+      store.commit('CHANGE_CHECKED',product)
+      return {"msg":"切换状态成功"}
+    }else{
+      return {"msg":"切换状态失败"}      
+    }
+   })
+  },
+  //购物车商品勾选状态全部取消
+  checkedAllFalse(store){
+    let user=store.state.user
+   return http.patch(api.host+'/users/'+user.id+'/carts',{
+      checked:false
+    })
+    .then(res=>{
+      
+    })
+  },
+   // 购物车商品勾选状态全部取消
+   checkedAllFalse (store) {
+    let carts = store.state.carts
+    let completeNum = 0
+    function promiseCheckedAllFalse () {
+      return new Promise(function (resolve, reject) {
+        for (let i = 0; i < carts.length; i++) {
+          http.patch(api.host + '/carts/' + carts[i].id, {
+            checked: false
+          })
+            .then(res => {
+              completeNum++
+              // 全部更改完成
+              if (completeNum >= carts.length - 1) {
+                resolve({"msg": "全部取消成功"})
+              }
+            })
+        }
+      })
+    }
+    return promiseCheckedAllFalse()
+      .then(res => {
+        // 更新本地购物车
+        store.commit('CHECKED_ALL_FALSE')
+        return res
+      })
+  },
+  // 购物车商品勾选状态全部选中
+  checkedAllTrue (store) {
+    let carts = store.state.carts
+    let completeNum = 0
+    function promiseCheckedAllTrue() {
+      return new Promise(function (resolve, reject) {
+        for (let i = 0; i < carts.length; i++) {
+          http.patch(api.host + '/carts/' + carts[i].id, {
+            checked: true
+          })
+            .then(res => {
+              completeNum++
+              // 全部更改完成
+              if (completeNum >= carts.length - 1) {
+                resolve({ "msg": "全部勾选成功" })
+              }
+            })
+        }
+      })
+    }
+    return promiseCheckedAllTrue()
+      .then(res => {
+        // 更新本地购物车
+        store.commit('CHECKED_ALL_TRUE')
+        return res
+      })
   }
 }
