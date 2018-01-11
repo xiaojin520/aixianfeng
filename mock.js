@@ -74,15 +74,39 @@ var data = new Mock.mock({
       'place_of_origin': '@cword(2, 4)',
       // 数量
       'num': 0,
-       // 商品详情
-       'details': '@cparagraph()'
+      // 商品详情
+      'details': '@cparagraph()'
+    }
+  ],
+  // 目前支持送货的城市列表
+  // "citys": ["北京市", "上海市", "广州市", "深圳市", "天津市", "承德市", "廊坊市", "南京市"],
+  "citys": [
+    {
+      "city": "北京市",
+      "name": "天安门",
+      "x": 116.403963,
+      "y": 39.915119
+    },
+    {
+      "city": "深圳市",
+      "name": "灵芝",
+      "x": 113.910988,
+      "y": 22.5754
+    },
+    {
+      "city": "广州市",
+      "name": "大新银行",
+      "x": 113.261512,
+      "y": 23.138287
     }
   ],
   // 用户信息表
   /* 
     {
       id,
-      phone
+      phone,
+      // 当前选择的地址
+      select_site
     }
   */
   'users': [],
@@ -99,7 +123,35 @@ var data = new Mock.mock({
       是否选择
     }
   */
-  'carts': []
+  'carts': [],
+  // 用户存储所有用户的地址信息
+  /* 
+    {
+      id: 地址在地址表中的id
+      用户id，这个地址是哪个用户的
+      联系人，
+      性别，
+      手机号码，
+      城市,
+      地区，
+      详细地址,->百度地图
+      坐标数据
+    }
+  */
+  'sites': [],
+  // 收藏列表
+  /* 
+    {
+      id: 商品在收藏表中的id,
+      用户id，这个收藏的商品是哪个用户的, user_id
+      商品的id, product_id
+      商品图片，img(小图)
+      商品名称，name
+      商品的单位，unit
+      商品的价格，price
+    }
+  */
+  'favors': []
 })
 
 fs.writeFile('db.json', JSON.stringify(data, null, 2), function () {

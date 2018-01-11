@@ -3,6 +3,7 @@
     <span v-if="back=='true'" class="extend-click header-icon header-left" @click="goBack()"></span>
     <div class="header-content">
       {{headerTitle}}
+      <slot></slot>
     </div>
   </div>
 </template>

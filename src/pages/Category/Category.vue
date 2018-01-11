@@ -39,7 +39,7 @@
           <router-link tag="li" :to="'/product-item/' + item.id" v-for="(item, index) in sortProducts" :key="item.id">
             <dl>
               <dt>
-                <img v-lazy="item.imgs.min">
+                <img v-lazy="item.imgs.min" :ref="'pro' + item.id">
               </dt>
               <dd class="nowrap product-item-title">
                 {{item.name}}
@@ -50,9 +50,9 @@
                   <var>￥{{item.price}}</var>
                 </div>
                 <div class="product-operates">
-                  <span class="inner" @click="subCart(item)">-</span>
+                  <span class="inner" @click.stop="subCart(item)">-</span>
                   <span class="product-operates-item">{{item.num}}</span>
-                  <span class="inner" @click="addCart(item)">+</span>
+                  <span class="inner" @click.stop="addCart(item)">+</span>
                 </div>
               </dd>
             </dl>
@@ -116,6 +116,9 @@ export default {
     // 用户信息对象
     user () {
       return this.$store.state.user
+    },
+    cartPos () {
+      return this.$store.state.cartPos
     }
   },
   methods: {
@@ -123,9 +126,12 @@ export default {
     subCart (product) {
       if (this.user.id) {
         if (product.num > 0) {
+          // 追加product_id属性
+          product.product_id = product.id
           this.$store.dispatch('subCart', product)
             .then(res => {
               this.$msg('提示', res.msg)
+              // 让当前商品的数量--
               product.num--
             })
         }
@@ -143,9 +149,30 @@ export default {
       if (this.user.id) {
         // 已经登陆或者注册过了
         // 将商品添加到购物车
+        // 追加product_id属性
+        product.product_id = product.id
         this.$store.dispatch('addCart', product)
           .then(res => { 
-            this.$msg('提示', res.msg)
+            // this.$msg('提示', res.msg)
+            // 走动画
+            // 获取点击对象所对应图片的位置信息
+            let pos = this.$refs['pro' + product.id][0].getBoundingClientRect()
+            // 获取购物车按钮的位置信息
+            let cartPos = this.$store.state.cartPos
+            let obj = {
+              src: product.imgs.min,
+              width: pos.width,
+              height: pos.height,
+              start: {
+                left: pos.left,
+                top: pos.top
+              },
+              end: {
+                left: cartPos.left,
+                top: cartPos.top
+              }
+            }
+            this.$addCart(obj)
             // 更新或者添加成功了之后让num++
             product.num++
           })

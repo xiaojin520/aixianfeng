@@ -3,8 +3,10 @@
     <TabBar v-show="tabBarShow"/>
     <!-- 缓存组件,created只触发一次啦 -->
     <keep-alive>
-      <router-view></router-view>
+      <router-view  v-if="!$route.meta.notKeepAlive"></router-view>
     </keep-alive>
+    <!-- 设置不缓存的页面 -->
+    <router-view v-if="$route.meta.notKeepAlive"></router-view>
   </div>
 </template>
 

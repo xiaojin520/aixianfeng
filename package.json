@@ -2,7 +2,7 @@
   "name": "vuecli",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "lzj <467316212@qq.com>",
+  "author": "唐向荣 <641418330@qq.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -13,7 +13,9 @@
   "dependencies": {
     "axios": "^0.17.1",
     "fastclick": "^1.0.6",
+    "jsonp": "^0.2.1",
     "mint-ui": "^2.2.13",
+    "underscore": "^1.8.3",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"

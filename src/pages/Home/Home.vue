@@ -20,8 +20,8 @@
           </div>
           <img class="category-item-banner" :src="item.category_img">
           <ul class="acts-category-item-goodsList">
-            <li v-for="(product, ind) in item.products" :key="product.id" v-if="ind < 3">
-              <img v-lazy="product.imgs.min">
+            <router-link tag="li" v-for="(product, ind) in item.products" :key="product.id" v-if="ind < 3" :to="'/product-item/' + product.id">
+              <img v-lazy="product.imgs.min" :ref="'home' + product.id">
               <p class="category-name">{{product.name}}</p>
               <div class="product-specifics">
                 <div class="product-specifics-left">
@@ -29,9 +29,9 @@
                   <p>￥{{product.price}}</p>
                 </div>
                 <!-- 添加到购物车按钮 -->
-                <div class="product-specifics-right" @click="addCart(product)">+</div>
+                <div class="product-specifics-right" @click.stop="addCart(product)">+</div>
               </div>
-            </li>
+            </router-link>
           </ul>
         </li>
       </ul>
@@ -73,9 +73,29 @@ export default {
       if (this.user.id) {
         // 已经登陆或者注册过了
         // 将商品添加到购物车
+        // 追加product_id属性
+        product.product_id = product.id
         this.$store.dispatch('addCart', product)
           .then(res => { 
-            this.$msg('提示', res.msg)
+            // this.$msg('提示', res.msg)
+            // 获取点击对象所对应图片的位置信息
+            let pos = this.$refs['home' + product.id][0].getBoundingClientRect()
+            // 获取购物车按钮的位置信息
+            let cartPos = this.$store.state.cartPos
+            let obj = {
+              src: product.imgs.min,
+              width: pos.width,
+              height: pos.height,
+              start: {
+                left: pos.left,
+                top: pos.top
+              },
+              end: {
+                left: cartPos.left,
+                top: cartPos.top
+              }
+            }
+            this.$addCart(obj)
             // 更新或者添加成功了之后让num++
             product.num++
           })
@@ -119,6 +139,7 @@ export default {
 .category-item-banner{
   width: 100%;
   margin: 0.9rem 0;
+  border-radius: 50%
 }
 .acts-category-item-goodsList{
   overflow: hidden;
